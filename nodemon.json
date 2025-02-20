@@ -1,0 +1,9 @@
+
+
+{
+  "watch": ["."],
+  "ext": "ts",
+  "ignore": ["node_modules"],
+  "exec": "node --loader ts-node/esm --no-warnings server/src/app.ts"
+}
+

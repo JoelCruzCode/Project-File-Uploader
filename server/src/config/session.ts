@@ -1,20 +1,31 @@
-import { config } from "dotenv"
-config();
-const SESSION_KEY = process.env.SESSION_KEY as string;
+import expressSession from 'express-session';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { prisma } from "./client.ts"
 
-import session from "express-session"
-import connectPgSimple from "connect-pg-simple"
-const pg = connectPgSimple(session)
 
-import pool from "./database.ts"
-
-if (!SESSION_KEY) {
-	throw new Error("key is not defined in env variables")
-}
-export default session({
-	store: new pg({ pool, createTableIfMissing: true }),
-	secret: SESSION_KEY,
-	resave: false,
+const prismaSession = expressSession({
+	cookie: {
+		maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+	},
+	secret: 'a santa at nasa',
+	resave: true,
 	saveUninitialized: true,
+	store: new PrismaSessionStore(
+		prisma,
+		{
+			checkPeriod: 2 * 60 * 1000,  //ms
+			dbRecordIdIsSessionId: true,
+			dbRecordIdFunction: undefined,
+		}
+	)
 });
+
+
+
+
+
+
+
+export default prismaSession
+
 

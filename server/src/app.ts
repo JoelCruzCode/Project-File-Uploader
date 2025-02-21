@@ -1,30 +1,20 @@
 ////const passport = require("./config/passport");
-
-
-
-
-
-// ------------------------------------------
-import { config } from "dotenv"
-config();
+import dotenv from "dotenv"
+dotenv.config()
 const { PORT } = process.env
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 import express from "express"
 import path from "node:path"
 import flash from "connect-flash"
-import sessionConfig from "./config/session.ts"
-
+import prismaSession from "./config/session.ts";
 import cors from "cors"
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
 const app = express();
-
-
 
 
 //Middleware to parse request bodies
@@ -35,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: 'http//localhost:5174' }));
 
 // Session & flash messages
-app.use(sessionConfig);
+app.use(prismaSession);
 app.use(flash());
 
 //Authentication Middleware

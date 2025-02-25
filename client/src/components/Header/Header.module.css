@@ -1,0 +1,13 @@
+.headerDiv {
+	/*min-width: 1080px;*/
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+
+.navBar {
+	display: flex;
+	gap: 1.3rem;
+}

@@ -9,7 +9,9 @@ const MAX = 16
 const alphaError = "must only contain letters";
 const confirmPWError = "input must match password field";
 const lengthError = ((min: number, max: number) => `must be between ${min} and ${max} characters`);
-
+const requiredInputCB = (field: string) => {
+	return body(field).trim().notEmpty().withMessage(`${field} is required`)
+}
 const usernameInput = body("username")
 	.trim()
 	.isAlpha()
@@ -48,7 +50,12 @@ export const registerValidation =
 	];
 
 
-export const loginValidation = [usernameInput]
+export const loginValidation = [
+	//requiredInputCB('username'),
+	//requiredInputCB('password'),
+	body("username").trim().notEmpty().withMessage("username required"),
+	body("password").trim().notEmpty().withMessage("password required"),
+]
 
 export const handleValidationErrors = () => {
 	return (req: Request, res: Response, next: NextFunction): any => {

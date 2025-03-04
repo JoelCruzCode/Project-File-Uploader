@@ -1,17 +1,24 @@
 
-import { Prisma } from "@prisma/client"
+import { Prisma, Users } from "@prisma/client"
 import { prisma } from "../config/client.ts";
 import { FolderData, UserData, FileData } from "../types/index.js";
+import bcrypt from "bcryptjs";
 
+interface UserCredentials {
+	username: string;
+	email: string;
+	password: string;
+}
 
-async function createUser(data: UserData): Promise<Users> {
+export async function createUser(data: UserCredentials): Promise<Users> {
 
 	try {
+		const passwordHash = await bcrypt.hash(data.password, 10)
 		return await prisma.users.create({
 			data: {
 				username: data.username,
 				email: data.email,
-				passwordHash: data.passwordHash
+				passwordHash: passwordHash
 			}
 		})
 	} catch (error: unknown) {
@@ -20,11 +27,11 @@ async function createUser(data: UserData): Promise<Users> {
 }
 
 
-export async function getUser(id: number): Promise<Prisma.UsersGetPayload<{ include: { files: true, folders: true } }> | null> {
+export async function getUser(username: string): Promise<Prisma.UsersGetPayload<{ include: { files: true, folders: true } }> | null> {
 
 	try {
 		return await prisma.users.findUnique({
-			where: { id },
+			where: { username },
 			include: { files: true, folders: true }
 		})
 	} catch (error) {
